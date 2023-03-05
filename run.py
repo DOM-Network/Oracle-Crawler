@@ -1,8 +1,8 @@
+import os
 import time
 from dotenv import dotenv_values
-config = dotenv_values(".env")
 
-dotenv_path = join(dirname(__file__), '.env')
+config = dotenv_values(".env")
 PRIV_KEY = os.environ.get("PRIV_KEY")
 ADDRESS = os.environ.get("ADDRESS")
 
