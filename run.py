@@ -1,7 +1,7 @@
 import time
-import os
-from os.path import join, dirname
-from dotenv import load_dotenv
+from dotenv import dotenv_values
+config = dotenv_values(".env")
+
 dotenv_path = join(dirname(__file__), '.env')
 PRIV_KEY = os.environ.get("PRIV_KEY")
 ADDRESS = os.environ.get("ADDRESS")
@@ -14,8 +14,9 @@ from core.utils import str_to_bytes32
 
 publisher = PublisherClient(
     "FVM_testnet", 
-    ADDRESS, 
-    PRIV_KEY)
+    config["ADDRESS"], 
+    config["PRIV_KEY"]
+)
 
 
 publisher.add_fetchers(
