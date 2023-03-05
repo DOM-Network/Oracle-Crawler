@@ -4,9 +4,7 @@ logger = logging.getLogger(__name__)
 
 
 def str_to_bytes32(text):
-    assert len(text) <= 32
-    text = text + '\0'*(32-len(text))
-    return text.encode('utf-8')
+    return str.encode(text)
 
 
 def currency_pair_to_pair_id(quote, base):

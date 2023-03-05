@@ -23,70 +23,53 @@ class CoreClient:
         self.client_private_key = client_private_key
         self.network = Networks[network]
         self.web3 = Web3(HTTPProvider(self.network['RPC']))
-        self._setup_contracts
+        self._setup_contracts()
 
     def _setup_contracts(self):
-        oracle_abis = json.load(open("abis/Oracle.json", "r"))
-        self.oracle = serialize.w3.eth.contract(
+        oracle_abis = json.load(open("abis/Oracle.json", "r"))['abi']
+        self.oracle = self.web3.eth.contract(
             address=self.network["Oracle Contract Address"], 
             abi=oracle_abis)
 
-        publisher_registry_abis =  json.load(open("abis/PublisherRegistry.json", "r"))
-        self.publisher_registry = serialize.w3.eth.contract(
+        publisher_registry_abis =  json.load(open("abis/PublisherRegistry.json", "r"))['abi']
+        self.publisher_registry = self.web3.eth.contract(
             address=self.network["Publisher Registry Contract Address"], 
             abi=publisher_registry_abis)
 
-    async def get_nonce(self):
+    def get_nonce(self):
         return self.web3.eth.getTransactionCount(self.client_address)
 
-    async def publish_spot_entry(self, spot_entry: SpotEntry):
+    def publish_spot_entry(self, spot_entry: SpotEntry):
         nonce = self.get_nonce()
-        call_function = contract.functions.publishSpotEntry({
-          base: {
-            timestamp: spot_entry.base.timestamp,
-            source: str_to_bytes32(spot_entry.base.source),
-            publisher: str_to_bytes32(spot_entry.base.publisher),
-          },
-          pairId: str_to_bytes32(spot_entry.pair_id),
-          price: spot_entry.price,
-          volume: spot_entry.volume,
-        }).buildTransaction({"chainId": Chain_id, "from": caller, "nonce": nonce, "gasPrice": w3.eth.gas_price})
+        call_function = self.oracle.functions.publishSpotEntry([
+          [
+            spot_entry.base.timestamp,                                #"timestamp"
+            str_to_bytes32(spot_entry.base.source),                   #"source"
+            str_to_bytes32(spot_entry.base.publisher)                 #"publisher"
+          ],
+          str_to_bytes32(spot_entry.pair_id),                         #"pairId"
+          spot_entry.price,                                           #"price"
+          spot_entry.volume                                           #"volume"
+        ]).buildTransaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 2000000000})
+
         signed_tx = self.web3.eth.account.sign_transaction(call_function, private_key = self.client_private_key)
         send_tx = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
         tx_receipt = self.web3.eth.wait_for_transaction_receipt(send_tx)
         return print(tx_receipt)
 
-    async def publish_spot_entry(self, spot_entry: SpotEntry):        
-        call_function = contract.functions.publishSpotEntry({
-          base: {
-            timestamp: spot_entry.base.timestamp,
-            source: str_to_bytes32(spot_entry.base.source),
-            publisher: str_to_bytes32(spot_entry.base.publisher),
-          },
-          pairId: str_to_bytes32(spot_entry.pair_id),
-          price: spot_entry.price,
-          volume: spot_entry.volume,
-        }).buildTransaction({"chainId": Chain_id, "from": caller, "nonce": nonce, "gasPrice": w3.eth.gas_price})
-
+    def publish_spot_entries(self, spot_entries:List[SpotEntry]):
         nonce = self.get_nonce()
-        signed_tx = self.web3.eth.account.sign_transaction(call_function, private_key = self.client_private_key)
-        send_tx = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        tx_receipt = self.web3.eth.wait_for_transaction_receipt(send_tx)
-        return print(tx_receipt)
-
-    async def publish_spot_entries(self, spot_entries:List[SpotEntry]):
-        call_function = contract.functions.publishSpotEntries([{
-          base: {
-            timestamp: spot_entry.base.timestamp,
-            source: str_to_bytes32(spot_entry.base.source),
-            publisher: str_to_bytes32(spot_entry.base.publisher),
-          },
-          pairId: str_to_bytes32(spot_entry.pair_id),
-          price: spot_entry.price,
-          volume: spot_entry.volume,
-        } for spot_entry in spot_entries]).buildTransaction({"chainId": Chain_id, "from": caller, "nonce": nonce, "gasPrice": w3.eth.gas_price})
+        call_function = self.oracle.functions.publishSpotEntries([[
+          [
+            spot_entry.base.timestamp,                                #"timestamp"
+            str_to_bytes32(spot_entry.base.source),                   #"source"
+            str_to_bytes32(spot_entry.base.publisher)                 #"publisher"
+          ],
+          str_to_bytes32(spot_entry.pair_id),                         #"pairId"
+          spot_entry.price,                                           #"price"
+          spot_entry.volume                                           #"volume"
+        ] for spot_entry in spot_entries]).buildTransaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 2000000000})
         
-        nonce = self.get_nonce()
         signed_tx = self.web3.eth.account.sign_transaction(call_function, private_key = self.client_private_key)
         send_tx = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
         tx_receipt = self.web3.eth.wait_for_transaction_receipt(send_tx)

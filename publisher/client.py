@@ -39,7 +39,7 @@ class PublisherClient(CoreClient):
         for fetcher in self.fetchers:
             data = fetcher.fetch_sync()
             results.extend(data)
-        return remove_fetch_error(results)
+        return self.remove_fetch_error(results)
 
     def remove_fetch_error(self, data: List[SpotEntry]) -> List[SpotEntry]:
         results = []
