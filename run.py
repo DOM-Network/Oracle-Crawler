@@ -29,6 +29,6 @@ publisher.add_fetchers(
 
 
 while True:
-    time.sleep(20)
+    time.sleep(750)
     data = publisher.fetch_sync()
     publisher.publish_spot_entries(data)
