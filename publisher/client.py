@@ -42,9 +42,11 @@ class PublisherClient(CoreClient):
         return self.remove_fetch_error(results)
 
     def remove_fetch_error(self, data: List[SpotEntry]) -> List[SpotEntry]:
+        timestamp = self.get_timestamp()
         results = []
         for entry in data:
             if type(entry) != PublisherFetchError:
+                entry.base.timestamp = timestamp
                 results.append(entry)
 
         return results

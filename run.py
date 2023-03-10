@@ -3,8 +3,8 @@ import time
 from dotenv import dotenv_values
 
 config = dotenv_values(".env")
-PRIV_KEY = os.environ.get("PRIV_KEY")
-ADDRESS = os.environ.get("ADDRESS")
+PRIV_KEY = config["PRIV_KEY"]
+ADDRESS = config["ADDRESS"]
 
 from publisher.client import PublisherClient
 from publisher.fetcher import *

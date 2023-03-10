@@ -39,6 +39,9 @@ class CoreClient:
     def get_nonce(self):
         return self.web3.eth.getTransactionCount(self.client_address)
 
+    def get_timestamp(self):
+        return self.web3.eth.get_block('latest').timestamp
+
     def publish_spot_entry(self, spot_entry: SpotEntry):
         nonce = self.get_nonce()
         call_function = self.oracle.functions.publishSpotEntry([
