@@ -27,8 +27,10 @@ publisher.add_fetchers(
 	GeminiFetcher(ALL_ASSETS, "DOM")]
 )
 
+print()
 
 while True:    
     data = publisher.fetch_sync()
-    responnse = publisher.publish_spot_entries(data)
+    response = publisher.publish_spot_entries(data)
+    print("Sample data: " + str(data[0]))
     time.sleep(10)
