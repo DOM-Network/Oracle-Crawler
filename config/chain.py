@@ -9,5 +9,10 @@ Networks = {
         "Oracle Contract Address":"",
         "Publisher Registry Contract Address":""
     }
+    "XPRL_testnet": {
+        "RPC": "https://rpc-evm-sidechain.peersyst.tech/",
+        "Oracle Contract Address":"",
+        "Publisher Registry Contract Address":""
+    }
 }
 

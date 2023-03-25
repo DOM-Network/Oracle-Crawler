@@ -13,7 +13,7 @@ from config.chain import Networks
 from core.utils import str_to_bytes32
 
 publisher = PublisherClient(
-    "FVM_testnet", 
+    "XRPL_testnet", 
     config["ADDRESS"], 
     config["PRIV_KEY"]
 )
@@ -30,5 +30,5 @@ publisher.add_fetchers(
 
 while True:    
     data = publisher.fetch_sync()
-    publisher.publish_spot_entries(data)
-    time.sleep(2700)
+    responnse = publisher.publish_spot_entries(data)
+    time.sleep(10)

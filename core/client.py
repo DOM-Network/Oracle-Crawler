@@ -24,6 +24,8 @@ class CoreClient:
         self.network = Networks[network]
         self.web3 = Web3(HTTPProvider(self.network['RPC']))
         self._setup_contracts()
+        print("Oracle Contract Address: " + self.network["Oracle Contract Address"])
+        print("Publisher Registry Contract Address: " + self.network["Publisher Registry Contract Address"])
 
     def _setup_contracts(self):
         oracle_abis = json.load(open("abis/Oracle.json", "r"))['abi']
