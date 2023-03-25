@@ -22,7 +22,7 @@ class CoreClient:
         self.client_address = client_address
         self.client_private_key = client_private_key
         self.network = Networks[network]
-        self.web3 = Web3(HTTPProvider(self.network['RPC']))
+        self.web3 = Web3(HTTPProvider(self.network['RPC'], request_kwargs={'timeout': 30}))
         self._setup_contracts()
         print("Oracle Contract Address: " + self.network["Oracle Contract Address"])
         print("Publisher Registry Contract Address: " + self.network["Publisher Registry Contract Address"])
@@ -55,12 +55,12 @@ class CoreClient:
           str_to_bytes32(spot_entry.pair_id),                         #"pairId"
           spot_entry.price,                                           #"price"
           spot_entry.volume                                           #"volume"
-        ]).buildTransaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 2000000000})
+        ]).buildTransaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 20000000000})
 
         signed_tx = self.web3.eth.account.sign_transaction(call_function, private_key = self.client_private_key)
         send_tx = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
         tx_receipt = self.web3.eth.wait_for_transaction_receipt(send_tx)
-        return print(tx_receipt)
+        return tx_receipt
 
     def publish_spot_entries(self, spot_entries:List[SpotEntry]):
         nonce = self.get_nonce()
@@ -73,10 +73,10 @@ class CoreClient:
           str_to_bytes32(spot_entry.pair_id),                         #"pairId"
           spot_entry.price,                                           #"price"
           spot_entry.volume                                           #"volume"
-        ] for spot_entry in spot_entries]).buildTransaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 2000000000})
+        ] for spot_entry in spot_entries]).buildTransaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 20000000000})
         
         signed_tx = self.web3.eth.account.sign_transaction(call_function, private_key = self.client_private_key)
         send_tx = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
         tx_receipt = self.web3.eth.wait_for_transaction_receipt(send_tx)
-        return print(tx_receipt)
+        return tx_receipt
 
