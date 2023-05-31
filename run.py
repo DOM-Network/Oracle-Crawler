@@ -13,7 +13,7 @@ from config.chain import Networks
 from core.utils import str_to_bytes32
 
 publisher = PublisherClient(
-    "XRPL_testnet", 
+    "XDC_testnet", 
     config["ADDRESS"], 
     config["PRIV_KEY"]
 )
