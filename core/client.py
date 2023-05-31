@@ -41,7 +41,7 @@ class CoreClient:
             abi=publisher_registry_abis)
 
     def get_nonce(self):
-        return self.web3.eth.getTransactionCount(self.client_address)
+        return self.web3.eth.get_transaction_count(self.client_address)
 
     def get_timestamp(self):
         return self.web3.eth.get_block('latest').timestamp
@@ -57,7 +57,7 @@ class CoreClient:
           str_to_bytes32(spot_entry.pair_id),                         #"pairId"
           spot_entry.price,                                           #"price"
           spot_entry.volume                                           #"volume"
-        ]).buildTransaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 20000000000})
+        ]).build_transaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 20000000000})
 
         signed_tx = self.web3.eth.account.sign_transaction(call_function, private_key = self.client_private_key)
         send_tx = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
@@ -75,7 +75,7 @@ class CoreClient:
           str_to_bytes32(spot_entry.pair_id),                         #"pairId"
           spot_entry.price,                                           #"price"
           spot_entry.volume                                           #"volume"
-        ] for spot_entry in spot_entries]).buildTransaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 20000000000})
+        ] for spot_entry in spot_entries]).build_transaction({"chainId": self.web3.eth.chain_id, "from": self.client_address, "nonce": nonce, 'maxFeePerGas': 20000000000})
         
         signed_tx = self.web3.eth.account.sign_transaction(call_function, private_key = self.client_private_key)
         send_tx = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
