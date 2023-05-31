@@ -1,8 +1,8 @@
 Networks = {
     "XDC_testnet": {
         "RPC": "https://erpc.xinfin.network",
-        "Oracle Contract Address":"0xF590112d1A6e45273010a0ba1B032CFa46E71ac7",
-        "Publisher Registry Contract Address":"0xa22948126B51c0e5a647C9e114Ba1a3592272332"
+        "Oracle Contract Address":"0x008cC38e2694Cf1e63B98643b6077510F5665D0b",
+        "Publisher Registry Contract Address":"0xa17B943874dc05996f393f8fCEC836C88DE01942"
     },
 }
 

@@ -31,6 +31,9 @@ print()
 
 while True:    
     data = publisher.fetch_sync()
-    response = publisher.publish_spot_entries(data)
+    try:
+        response = publisher.publish_spot_entries(data)
+    except:
+        print("Submit error!!!")
     print("Sample data: " + str(data[0]))
     time.sleep(10)
