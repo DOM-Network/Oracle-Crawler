@@ -2,6 +2,7 @@ import logging
 from typing import Optional, List
 import json
 from web3 import Web3, HTTPProvider
+from web3.middleware import geth_poa_middleware
 
 from config.chain import Networks
 from core.entry import SpotEntry
@@ -23,6 +24,7 @@ class CoreClient:
         self.client_private_key = client_private_key
         self.network = Networks[network]
         self.web3 = Web3(HTTPProvider(self.network['RPC'], request_kwargs={'timeout': 30}))
+        self.web3.middleware_onion.inject(geth_poa_middleware, layer=0)
         self._setup_contracts()
         print("Oracle Contract Address: " + self.network["Oracle Contract Address"])
         print("Publisher Registry Contract Address: " + self.network["Publisher Registry Contract Address"])
